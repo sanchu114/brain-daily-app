@@ -1,0 +1,317 @@
+/* 
+  10年前のTwitterをリスペクトしたUI
+  フォント、色使い、レイアウトを極力シンプルに
+*/
+
+:root {
+    --primary-color: #00aced; /* 昔のTwitterっぽい水色 */
+    --primary-hover: #0084b4;
+    --bg-color: #f5f8fa; /* 薄いグレーの背景 */
+    --text-color: #333333;
+    --light-text: #8899a6;
+    --border-color: #e1e8ed;
+    --white: #ffffff;
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    /* iOSでのタップハイライトを消す */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ヘッダー */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--white);
+    height: 46px; /* 昔っぽい高さ */
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* メインコンテナ */
+.container {
+    max-width: 600px; /* PCで見てもスマホ風の幅に */
+    margin: 0 auto;
+    background-color: var(--white);
+    min-height: calc(100vh - 46px);
+}
+
+/* 投稿エリア */
+.tweet-box-container {
+    padding: 12px 16px;
+    background-color: #e8f5fd; /* 入力エリアの背景色（昔のアレ） */
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px; /* 昔は四角だった */
+    background-color: #ccd6dd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.tweet-input-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#tweetInput {
+    width: 100%;
+    border: 1px solid #c6e1f0;
+    border-radius: 3px;
+    padding: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+#tweetInput:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 172, 237, 0.4);
+}
+
+.tweet-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 8px;
+    gap: 12px;
+}
+
+.char-count {
+    color: var(--light-text);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.char-count.over {
+    color: #e0245e;
+}
+
+.tweet-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px; /* 丸みは控えめ */
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset; /* 立体感 */
+}
+
+.tweet-btn:active {
+    background-color: var(--primary-hover);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.tweet-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* タイムライン */
+.timeline-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--white);
+}
+
+.timeline-header h2 {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.loading {
+    padding: 16px;
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 14px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.timeline-list {
+    list-style: none;
+}
+
+.tweet-item {
+    display: flex;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tweet-content-area {
+    flex-grow: 1;
+    word-break: break-word;
+}
+
+.tweet-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.tweet-user {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.tweet-time {
+    font-size: 12px;
+    color: var(--light-text);
+}
+
+.tweet-text {
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+/* モーダル */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--white);
+    width: 90%;
+    max-width: 400px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--light-text);
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+.settings-desc {
+    font-size: 13px;
+    margin-bottom: 16px;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccd6dd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--light-text);
+}
+
+.save-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.save-btn:active {
+    background-color: var(--primary-hover);
+}
