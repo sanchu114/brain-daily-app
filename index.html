@@ -1,89 +1,92 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Brain Diary</title>
-    <!-- スマホアプリ化（PWA）用 -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Diary">
-    <link rel="apple-touch-icon" href="/icon.png">
-    
-    <link rel="stylesheet" href="/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Brain Diary</title>
+  <!-- スマホアプリ化（PWA）用 -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Diary">
+  <link rel="apple-touch-icon" href="/icon.png">
+
+  <link rel="stylesheet" href="/styles.css">
 </head>
+
 <body>
-    <!-- ヘッダー -->
-    <header class="top-nav">
-        <div class="header-left">
-            <span class="logo">Diary</span>
-        </div>
-        <div class="header-right">
-            <button id="settingsBtn" class="icon-btn" aria-label="設定">⚙️</button>
-        </div>
-    </header>
+  <!-- ヘッダー -->
+  <header class="top-nav">
+    <div class="header-left">
+      <span class="logo">Diary</span>
+    </div>
+    <div class="header-right">
+      <button id="settingsBtn" class="icon-btn" aria-label="設定">⚙️</button>
+    </div>
+  </header>
 
-    <main class="container">
-        <!-- 投稿エリア（昔のTwitter風） -->
-        <div class="tweet-box-container">
-            <div class="user-avatar">
-                <div class="avatar-placeholder">👤</div>
-            </div>
-            <div class="tweet-input-area">
-                <textarea id="tweetInput" placeholder="いまどうしてる？" rows="3" maxlength="140"></textarea>
-                <div class="tweet-controls">
-                    <span id="charCount" class="char-count">140</span>
-                    <button id="tweetBtn" class="tweet-btn">つぶやく</button>
-                </div>
-            </div>
+  <main class="container">
+    <!-- 投稿エリア（昔のTwitter風） -->
+    <div class="tweet-box-container">
+      <div class="user-avatar">
+        <div class="avatar-placeholder">👤</div>
+      </div>
+      <div class="tweet-input-area">
+        <textarea id="tweetInput" placeholder="いまどうしてる？" rows="3" maxlength="140"></textarea>
+        <div class="tweet-controls">
+          <span id="charCount" class="char-count">140</span>
+          <button id="tweetBtn" class="tweet-btn">つぶやく</button>
         </div>
-
-        <!-- 今日のタイムラインエリア -->
-        <div class="timeline-header">
-            <h2>今日のタイムライン</h2>
-        </div>
-        
-        <div id="loadingIndicator" class="loading hidden">
-            <span>同期中...</span>
-        </div>
-
-        <ul id="timeline" class="timeline-list">
-            <!-- JavaScriptでここに投稿が挿入される -->
-        </ul>
-    </main>
-
-    <!-- 設定モーダル（初回入力用） -->
-    <div id="settingsModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>設定</h3>
-                <button id="closeSettingsBtn" class="close-btn">×</button>
-            </div>
-            <div class="modal-body">
-                <p class="settings-desc">GitHubへの保存設定を行います。</p>
-                
-                <div class="form-group">
-                    <label for="githubToken">GitHub Personal Access Token</label>
-                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" />
-                    <small>※このトークンは端末内(localStorage)にのみ安全に保存されます。</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="githubOwner">リポジトリのオーナー（例: sanchu114）</label>
-                    <input type="text" id="githubOwner" value="sanchu114" />
-                </div>
-                
-                <div class="form-group">
-                    <label for="githubRepo">リポジトリ名（例: brain-logs）</label>
-                    <input type="text" id="githubRepo" value="brain-logs" />
-                </div>
-                
-                <button id="saveSettingsBtn" class="save-btn">保存する</button>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <script type="module" src="/app.js"></script>
+    <!-- 今日のタイムラインエリア -->
+    <div class="timeline-header">
+      <h2>今日のタイムライン</h2>
+    </div>
+
+    <div id="loadingIndicator" class="loading hidden">
+      <span>同期中...</span>
+    </div>
+
+    <ul id="timeline" class="timeline-list">
+      <!-- JavaScriptでここに投稿が挿入される -->
+    </ul>
+  </main>
+
+  <!-- 設定モーダル（初回入力用） -->
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>設定</h3>
+        <button id="closeSettingsBtn" class="close-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="settings-desc">GitHubへの保存設定を行います。</p>
+
+        <div class="form-group">
+          <label for="githubToken">GitHub Personal Access Token</label>
+          <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" />
+          <small>※このトークンは端末内(localStorage)にのみ安全に保存されます。</small>
+        </div>
+
+        <div class="form-group">
+          <label for="githubOwner">リポジトリのオーナー（例: sanchu114）</label>
+          <input type="text" id="githubOwner" value="sanchu114" />
+        </div>
+
+        <div class="form-group">
+          <label for="githubRepo">リポジトリ名（例: brain-logs）</label>
+          <input type="text" id="githubRepo" value="brain-logs" />
+        </div>
+
+        <button id="saveSettingsBtn" class="save-btn">保存する</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/app.js"></script>
 </body>
+
 </html>

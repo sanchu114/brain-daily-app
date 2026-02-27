@@ -13,7 +13,6 @@ let isSubmitting = false;
 // DOM要素
 const tweetInput = document.getElementById('tweetInput');
 const tweetBtn = document.getElementById('tweetBtn');
-const charCount = document.getElementById('charCount');
 const timeline = document.getElementById('timeline');
 const settingsModal = document.getElementById('settingsModal');
 const settingsBtn = document.getElementById('settingsBtn');
@@ -24,14 +23,14 @@ const loadingIndicator = document.getElementById('loadingIndicator');
 // 初期化
 function init() {
     loadConfig();
-    
+
     // イベントリスナー
     tweetInput.addEventListener('input', handleInput);
     tweetBtn.addEventListener('click', postTweet);
     settingsBtn.addEventListener('click', openSettings);
     closeSettingsBtn.addEventListener('click', closeSettings);
     saveSettingsBtn.addEventListener('click', saveSettings);
-    
+
     // トークンがなければ設定画面を開く
     if (!config.token) {
         openSettings();
@@ -46,19 +45,7 @@ function init() {
 // ---------------------------
 function handleInput() {
     const text = tweetInput.value;
-    const remaining = 140 - text.length;
-    charCount.textContent = remaining;
-    
-    if (remaining < 0) {
-        charCount.classList.add('over');
-        tweetBtn.disabled = true;
-    } else if (text.trim() === '') {
-        charCount.classList.remove('over');
-        tweetBtn.disabled = true;
-    } else {
-        charCount.classList.remove('over');
-        tweetBtn.disabled = false;
-    }
+    tweetBtn.disabled = text.trim() === '';
 }
 
 function openSettings() {
@@ -76,10 +63,10 @@ function saveSettings() {
     config.token = document.getElementById('githubToken').value.trim();
     config.owner = document.getElementById('githubOwner').value.trim();
     config.repo = document.getElementById('githubRepo').value.trim();
-    
+
     localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
     closeSettings();
-    
+
     if (config.token) {
         fetchTodayTimeline();
     }
@@ -95,7 +82,7 @@ function loadConfig() {
 function appendTweetToUI(text, timestampStr) {
     const li = document.createElement('li');
     li.classList.add('tweet-item');
-    
+
     li.innerHTML = `
         <div class="user-avatar">
             <div class="avatar-placeholder">👤</div>
@@ -108,21 +95,21 @@ function appendTweetToUI(text, timestampStr) {
             <div class="tweet-text">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
         </div>
     `;
-    
+
     // 最上部に挿入（最新が上）
     timeline.insertBefore(li, timeline.firstChild);
 }
 
 function renderTimelineFromMarkdown(markdown) {
     timeline.innerHTML = ''; // クリア
-    
+
     // 単純なパース。`## HH:MM` などの見出しと本文を抽出する
     // Markdownの構成: 
     // ## 10:00
     // つぶやきテスト
-    
+
     const parts = markdown.split(/##\s+(\d{1,2}:\d{2}(:\d{2})?)/);
-    
+
     // 古い順に入っているので、配列としては[本文の前, 時刻, 秒, 本文, 時刻, 秒, 本文...] となる
     const tweets = [];
     for (let i = 1; i < parts.length; i += 3) {
@@ -132,7 +119,7 @@ function renderTimelineFromMarkdown(markdown) {
             tweets.push({ time, content });
         }
     }
-    
+
     // UIには最新を上に表示したい
     tweets.reverse().forEach(tweet => {
         appendTweetToUI(tweet.content, tweet.time);
@@ -150,12 +137,12 @@ async function fetchGitHubAPI(url, method = 'GET', body = null) {
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json'
     };
-    
+
     const options = { method, headers };
     if (body) {
         options.body = JSON.stringify(body);
     }
-    
+
     const response = await fetch(url, options);
     return response;
 }
@@ -190,16 +177,16 @@ async function createOrUpdateFile(path, content, message, sha = null) {
     const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
     // Unicode対応Base64エンコード
     const encodedContent = btoa(unescape(encodeURIComponent(content)));
-    
+
     const body = {
         message: message,
         content: encodedContent
     };
-    
+
     if (sha) {
         body.sha = sha;
     }
-    
+
     const res = await fetchGitHubAPI(url, 'PUT', body);
     if (!res.ok) {
         throw new Error('ファイルの保存に失敗しました');
@@ -210,12 +197,12 @@ async function createOrUpdateFile(path, content, message, sha = null) {
 // 今日のタイムラインを取得して表示
 async function fetchTodayTimeline() {
     if (!config.token) return;
-    
+
     loadingIndicator.classList.remove('hidden');
     try {
         const today = getTodayString();
         const path = `${config.path}/${today}.md`;
-        
+
         const file = await getFile(path);
         if (file && file.content) {
             renderTimelineFromMarkdown(file.content);
@@ -233,25 +220,25 @@ async function fetchTodayTimeline() {
 async function postTweet() {
     const text = tweetInput.value.trim();
     if (!text || !config.token || isSubmitting) return;
-    
+
     isSubmitting = true;
     tweetBtn.disabled = true;
     tweetBtn.textContent = '送信中...';
     tweetInput.disabled = true;
-    
+
     try {
         const now = new Date();
         const todayStr = getTodayString();
         const timeStr = now.toLocaleTimeString('ja-JP', { hour12: false }); // 24H
-        
+
         const path = `${config.path}/${todayStr}.md`;
         const newEntry = `\n## ${timeStr}\n${text}\n`;
-        
+
         // 既存ファイルの取得
         const file = await getFile(path);
         let updatedContent = '';
         let sha = null;
-        
+
         if (file) {
             // 追記
             updatedContent = file.content + newEntry;
@@ -260,15 +247,15 @@ async function postTweet() {
             // 新規作成用にMarkdownヘッダーをつける
             updatedContent = `# ${todayStr} の記録\n` + newEntry;
         }
-        
+
         // 保存（コミット）
         await createOrUpdateFile(
-            path, 
-            updatedContent, 
-            `Sync: Tweet on ${timeStr}`, 
+            path,
+            updatedContent,
+            `Sync: Tweet on ${timeStr}`,
             sha
         );
-        
+
         // UI更新
         tweetInput.value = '';
         handleInput(); // 文字数リセット
@@ -276,7 +263,7 @@ async function postTweet() {
             timeline.innerHTML = '';
         }
         appendTweetToUI(text, timeStr);
-        
+
     } catch (e) {
         alert('エラーが発生しました: ' + e.message);
         console.error(e);
