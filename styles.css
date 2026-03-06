@@ -130,6 +130,26 @@ body {
     color: #e0245e;
 }
 
+.action-btn {
+    background-color: var(--white);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: #e8f5fd;
+}
+
+.action-btn:active {
+    background-color: #d1ecfc;
+}
+
 .tweet-btn {
     background-color: var(--primary-color);
     color: var(--white);

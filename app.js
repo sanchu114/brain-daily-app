@@ -13,6 +13,7 @@ let isSubmitting = false;
 // DOM要素
 const tweetInput = document.getElementById('tweetInput');
 const tweetBtn = document.getElementById('tweetBtn');
+const templateBtn = document.getElementById('templateBtn');
 const timeline = document.getElementById('timeline');
 const settingsModal = document.getElementById('settingsModal');
 const settingsBtn = document.getElementById('settingsBtn');
@@ -27,6 +28,7 @@ function init() {
     // イベントリスナー
     tweetInput.addEventListener('input', handleInput);
     tweetBtn.addEventListener('click', postTweet);
+    templateBtn.addEventListener('click', insertTemplate);
     settingsBtn.addEventListener('click', openSettings);
     closeSettingsBtn.addEventListener('click', closeSettings);
     saveSettingsBtn.addEventListener('click', saveSettings);
@@ -46,6 +48,29 @@ function init() {
 function handleInput() {
     const text = tweetInput.value;
     tweetBtn.disabled = text.trim() === '';
+}
+
+function insertTemplate() {
+    const template = `【🌙 今日のふりかえり】
+- 昨日の自分へのアンサー：
+
+- 今日一番心に残ったこと：
+- なんでそう感じた？：
+
+- 明日ちょっと試してみたいこと：
+`;
+    // 既存の入力テキストの末尾にテンプレートを追加（空の場合はそのままセット）
+    if (tweetInput.value.trim() === '') {
+        tweetInput.value = template;
+    } else {
+        tweetInput.value = tweetInput.value + '\n\n' + template;
+    }
+    handleInput();
+    tweetInput.focus();
+
+    // カーソルを「昨日の自分へのアンサー：」の後に移動させる
+    const pos = tweetInput.value.indexOf('昨日の自分へのアンサー：') + '昨日の自分へのアンサー：'.length;
+    tweetInput.setSelectionRange(pos, pos);
 }
 
 function openSettings() {

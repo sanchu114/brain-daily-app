@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- ジョブの識別子 -->
+    <key>Label</key>
+    <string>com.brain.diary.sync</string>
+
+    <!-- 実行するスクリプト -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/yamanakashiho/brain-daily/sync-diary.sh</string>
+    </array>
+
+    <!-- Mac起動・ログイン時に実行 -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- 86400秒（24時間）ごとに繰り返し実行 -->
+    <key>StartInterval</key>
+    <integer>86400</integer>
+
+    <!-- ログ出力先 -->
+    <key>StandardOutPath</key>
+    <string>/Users/yamanakashiho/brain/.sync-agent.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/yamanakashiho/brain/.sync-agent-error.log</string>
+</dict>
+</plist>
